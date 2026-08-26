@@ -1,0 +1,28 @@
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: cimg/base:current
+    steps:
+      - checkout
+      - run:
+          name: Say hello
+          command: echo "sail-exporter validation build"
+      - run:
+          name: Emit a test result
+          command: |
+            mkdir -p test-results
+            cat > test-results/results.xml <<'XML'
+            <?xml version="1.0" encoding="UTF-8"?>
+            <testsuite name="probe" tests="1" failures="0" errors="0" time="0.01">
+              <testcase classname="probe" name="it_runs" time="0.01"/>
+            </testsuite>
+            XML
+      - store_test_results:
+          path: test-results
+
+workflows:
+  validate:
+    jobs:
+      - build
