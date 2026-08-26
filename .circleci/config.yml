@@ -13,13 +13,15 @@ jobs:
           name: Emit a test result
           command: |
             mkdir -p test-results
-            cat > test-results/results.xml <<'XML'
-            <?xml version="1.0" encoding="UTF-8"?>
-            <testsuite name="probe" tests="1" failures="0" errors="0" time="0.01">
-              <testcase classname="probe" name="it_runs" time="0.01"/>
-            </testsuite>
-            XML
+            printf '%s\n' '<?xml version="1.0" encoding="UTF-8"?>' > test-results/results.xml
+            printf '%s\n' '<testsuite name="probe" tests="2" failures="0" errors="0" time="0.02">' >> test-results/results.xml
+            printf '%s\n' '  <testcase classname="probe.smoke" name="it_runs" time="0.01"/>' >> test-results/results.xml
+            printf '%s\n' '  <testcase classname="probe.smoke" name="it_reports" time="0.01"/>' >> test-results/results.xml
+            printf '%s\n' '</testsuite>' >> test-results/results.xml
+            cat test-results/results.xml
       - store_test_results:
+          path: test-results
+      - store_artifacts:
           path: test-results
 
 workflows:
